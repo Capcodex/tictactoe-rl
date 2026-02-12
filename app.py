@@ -9,10 +9,11 @@ from rl import QLearningAgent, check_winner_abs, is_full_abs, abs_to_state
 from minimax import minimax_best_move
 from flask_cors import CORS
 
+
 app = Flask(__name__, static_folder="static", static_url_path="")
 CORS(app)
 
-app = Flask(__name__, static_folder="static", static_url_path="")
+
 
 agent = QLearningAgent(qtable_path="qtable.pkl")
 
@@ -42,12 +43,12 @@ def index():
 
 
 # ------------------ EPSILON CONTROL ------------------
-@app.get("`${API_BASE}/api/epsilon")
+@app.get("/api/epsilon")
 def get_epsilon():
     return jsonify({"ok": True, "epsilon": float(agent.epsilon), "epsilon_min": float(agent.epsilon_min)})
 
 
-@app.post("`${API_BASE}/api/epsilon")
+@app.post("/api/epsilon")
 def set_epsilon():
     data = request.get_json(force=True) if request.data else {}
     try:
@@ -62,7 +63,7 @@ def set_epsilon():
 
 
 # ------------------ GAME API (humain vs bot) ------------------
-@app.get("`${API_BASE}/api/new")
+@app.get("/api/new")
 def new_game():
     bot = (request.args.get("bot", "rl") or "rl").lower()
     if bot not in ("rl", "minimax", "remote"):
@@ -105,7 +106,7 @@ def new_game():
     return jsonify(_public_game(game))
 
 
-@app.post("`${API_BASE}/api/move")
+@app.post("/api/move")
 def human_move():
     data = request.get_json(force=True)
     gid = data.get("game_id")
@@ -145,7 +146,7 @@ def human_move():
     return jsonify(_public_game(game))
 
 
-@app.post("`${API_BASE}/api/train")
+@app.post("/api/train")
 def train():
     data = request.get_json(force=True) if request.data else {}
     episodes = int(data.get("episodes", 1000))
@@ -186,7 +187,7 @@ def train():
     return jsonify({"ok": True, "mode": mode, "stats": stats, "global_stats": STATS, "epsilon": float(agent.epsilon)})
 
 
-@app.get("`${API_BASE}/api/state")
+@app.get("/api/state")
 def state():
     gid = request.args.get("game_id")
     if not gid or gid not in GAMES:
