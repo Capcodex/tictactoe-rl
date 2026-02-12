@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Morpion RL</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div>
+        <h1>Morpion – RL / Minimax / Remote</h1>
+        <p class="sub">Jouer + entraîner + faire des matchs automatiques (arena).</p>
+      </div>
+
+      <div class="status">
+        <div><span class="label">Adversaire :</span> <span id="botName">?</span></div>
+        <div><span class="label">Toi :</span> <span id="humanMark">?</span></div>
+        <div><span class="label">Adversaire :</span> <span id="botMark">?</span></div>
+        <div><span class="label">Tour :</span> <span id="turn">?</span></div>
+        <div><span class="label">ε (train) :</span> <span id="eps">?</span></div>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="controls">
+        <div class="newgame">
+          <select id="opponent">
+            <option value="rl">Jouer contre : RL</option>
+            <option value="minimax">Jouer contre : Minimax</option>
+            <option value="remote">Jouer contre : Remote API</option>
+          </select>
+
+          <input id="remoteUrl" type="text" placeholder="URL remote (ex: http://127.0.0.1:9000)" />
+
+          <button id="playX">Nouvelle partie (je joue X)</button>
+          <button id="playO">Nouvelle partie (je joue O)</button>
+        </div>
+
+        <div class="epsilon">
+          <input id="epsilonVal" type="number" step="0.01" min="0" max="1" value="0.20" />
+          <button id="setEpsBtn">Appliquer ε</button>
+        </div>
+
+        <div class="train">
+          <select id="mode">
+            <option value="selfplay">Entraîner : Self-play</option>
+            <option value="minimax">Entraîner : vs Minimax</option>
+          </select>
+          <input id="episodes" type="number" min="1" max="50000" value="5000"/>
+          <button id="trainBtn">Entraîner</button>
+        </div>
+      </div>
+
+      <div id="board" class="board"></div>
+
+      <div class="footer">
+        <div id="msg" class="msg">Clique sur une case vide pour jouer.</div>
+      </div>
+
+      <div class="stats">
+        <h2>Arena (bot vs bot)</h2>
+        <div class="arenaRow">
+          <select id="arenaX">
+            <option value="remote">X = Remote</option>
+            <option value="rl">X = RL</option>
+            <option value="minimax">X = Minimax</option>
+          </select>
+          <select id="arenaO">
+            <option value="rl">O = RL</option>
+            <option value="minimax">O = Minimax</option>
+            <option value="remote">O = Remote</option>
+          </select>
+          <input id="arenaGames" type="number" min="1" max="5000" value="200" />
+          <button id="arenaBtn">Lancer l'arena</button>
+        </div>
+
+        <div class="grid" style="margin-top:10px">
+          <div class="card"><div class="k">X wins</div><div id="aX" class="v">-</div></div>
+          <div class="card"><div class="k">O wins</div><div id="aO" class="v">-</div></div>
+          <div class="card"><div class="k">Nuls</div><div id="aD" class="v">-</div></div>
+          <div class="card"><div class="k">Coups moyens</div><div id="aM" class="v">-</div></div>
+          <div class="card"><div class="k">Erreurs</div><div id="aE" class="v">-</div></div>
+        </div>
+        <p class="hint" id="arenaHint"></p>
+      </div>
+
+      <div class="stats">
+        <h2>Stats globales (toi vs adversaire)</h2>
+        <div class="grid">
+          <div class="card"><div class="k">Parties</div><div id="gGames" class="v">-</div></div>
+          <div class="card"><div class="k">Victoires adversaire</div><div id="gBot" class="v">-</div></div>
+          <div class="card"><div class="k">Victoires toi</div><div id="gHuman" class="v">-</div></div>
+          <div class="card"><div class="k">Nuls</div><div id="gDraws" class="v">-</div></div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <h2>Dernier entraînement</h2>
+        <div class="grid">
+          <div class="card"><div class="k">Mode</div><div id="tMode" class="v">-</div></div>
+          <div class="card"><div class="k">Épisodes</div><div id="stEpisodes" class="v">-</div></div>
+          <div class="card"><div class="k">ε</div><div id="stEps" class="v">-</div></div>
+          <div class="card"><div class="k">Score A</div><div id="stA" class="v">-</div></div>
+          <div class="card"><div class="k">Score B</div><div id="stB" class="v">-</div></div>
+          <div class="card"><div class="k">Nuls</div><div id="stD" class="v">-</div></div>
+          <div class="card"><div class="k">Coups moyens</div><div id="stM" class="v">-</div></div>
+          <div class="card"><div class="k">États Q-table</div><div id="stQ" class="v">-</div></div>
+        </div>
+        <p class="hint" id="trainHint"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
