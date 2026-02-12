@@ -42,12 +42,12 @@ def index():
 
 
 # ------------------ EPSILON CONTROL ------------------
-@app.get("/api/epsilon")
+@app.get("`${API_BASE}/api/epsilon")
 def get_epsilon():
     return jsonify({"ok": True, "epsilon": float(agent.epsilon), "epsilon_min": float(agent.epsilon_min)})
 
 
-@app.post("/api/epsilon")
+@app.post("`${API_BASE}/api/epsilon")
 def set_epsilon():
     data = request.get_json(force=True) if request.data else {}
     try:
@@ -62,7 +62,7 @@ def set_epsilon():
 
 
 # ------------------ GAME API (humain vs bot) ------------------
-@app.get("/api/new")
+@app.get("`${API_BASE}/api/new")
 def new_game():
     bot = (request.args.get("bot", "rl") or "rl").lower()
     if bot not in ("rl", "minimax", "remote"):
@@ -105,7 +105,7 @@ def new_game():
     return jsonify(_public_game(game))
 
 
-@app.post("/api/move")
+@app.post("`${API_BASE}/api/move")
 def human_move():
     data = request.get_json(force=True)
     gid = data.get("game_id")
@@ -145,7 +145,7 @@ def human_move():
     return jsonify(_public_game(game))
 
 
-@app.post("/api/train")
+@app.post("`${API_BASE}/api/train")
 def train():
     data = request.get_json(force=True) if request.data else {}
     episodes = int(data.get("episodes", 1000))
@@ -186,7 +186,7 @@ def train():
     return jsonify({"ok": True, "mode": mode, "stats": stats, "global_stats": STATS, "epsilon": float(agent.epsilon)})
 
 
-@app.get("/api/state")
+@app.get("`${API_BASE}/api/state")
 def state():
     gid = request.args.get("game_id")
     if not gid or gid not in GAMES:
