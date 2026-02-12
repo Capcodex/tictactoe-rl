@@ -8,6 +8,10 @@ import requests
 from rl import QLearningAgent, check_winner_abs, is_full_abs, abs_to_state
 from minimax import minimax_best_move
 
+from flask_cors import CORS
+CORS(app)
+
+
 app = Flask(__name__, static_folder="static", static_url_path="")
 
 agent = QLearningAgent(qtable_path="qtable.pkl")

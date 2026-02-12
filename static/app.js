@@ -1,3 +1,5 @@
+const API_BASE = "https://ton-backend.onrender.com";
+
 let gameId = null;
 let state = null;
 
@@ -100,7 +102,7 @@ function render() {
 }
 
 async function refreshEpsilonUI() {
-  const res = await fetch("/api/epsilon");
+  const res = await fetch(`${API_BASE}/api/epsilon`);
   const data = await res.json();
   if (data.ok) {
     document.getElementById("epsilonVal").value = (data.epsilon ?? 0.2).toFixed(2);
@@ -110,7 +112,7 @@ async function refreshEpsilonUI() {
 
 async function applyEpsilon() {
   const eps = parseFloat(document.getElementById("epsilonVal").value || "0.2");
-  const res = await fetch("/api/epsilon", {
+  const res = await fetch(`${API_BASE}/api/epsilon`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ epsilon: eps })
@@ -162,7 +164,7 @@ async function onClickCell(pos) {
   if (state.turn === state.bot) return;
   if (state.board[pos] !== "") return;
 
-  const res = await fetch("/api/move", {
+  const res = await fetch(`${API_BASE}/api/move`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ game_id: gameId, pos })
@@ -183,7 +185,7 @@ async function train() {
   const eps = parseFloat(document.getElementById("epsilonVal").value || "0.2");
 
   setMsg(`Entraînement en cours (${mode}, ${episodes} épisodes, ε=${eps})…`, "");
-  const res = await fetch("/api/train", {
+  const res = await fetch(`${API_BASE}/api/train`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ episodes, mode, epsilon: eps })
@@ -216,7 +218,7 @@ async function runArena() {
 
   setMsg(`Arena en cours: X=${x} vs O=${o} (${games} parties)…`, "");
 
-  const res = await fetch("/api/arena", {
+  const res = await fetch(`${API_BASE}/api/arena`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ x, o, games, remote_url: remoteUrl })
