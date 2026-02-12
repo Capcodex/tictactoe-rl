@@ -1,4 +1,4 @@
-const API_BASE = "https://ton-backend.onrender.com";
+const API_BASE = "https://tictactoe-rl.onrender.com/";
 
 let gameId = null;
 let state = null;
